@@ -1,14 +1,12 @@
-import http from 'http';
+import http2 from 'http2';
 import fs from 'fs';
 
-const server = http.createServer((req,res)=>{
+const server = http2.createSecureServer({
+    key:fs.readFileSync('./keys/server.key'),
+    cert:fs.readFileSync('./keys/server.crt')
+    },
+    (req,res)=>{
     console.log(req.url);
-    // res.writeHead(200,{"content-type":'text/html'});
-    // res.write('<h1>orrai</h1>');
-    // res.end();
-    // const data = {name:'John Doe', age:30, city: 'New York'};
-    // res.writeHead(200,{"content-type":'application/json'});
-    // res.end(JSON.stringify(data));
     if(req.url === '/'){
         const htmlFile = fs.readFileSync('./public/index.html','utf-8');
         res.writeHead(200,{'content-type':'text/html'});
@@ -20,8 +18,13 @@ const server = http.createServer((req,res)=>{
     }else if(req.url?.endsWith('.css')){
         res.writeHead(200,{'content-type':'text/css'});
     }
-    const responseContent = fs.readFileSync(`./public${req.url}`,'utf-8');
-    res.end(responseContent);
+    try {
+        const responseContent = fs.readFileSync(`./public${req.url}`,'utf-8');
+        res.end(responseContent);
+    } catch (error) {
+        res.writeHead(404,{'content-type':'text/html'});
+        res.end();
+    }
 })
 
 server.listen(3000,()=>{
