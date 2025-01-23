@@ -1,3 +1,4 @@
+import { AppRoutes } from "./presentation/routes";
 import { Server } from "./presentation/server";
 
 (()=>{
@@ -7,6 +8,7 @@ import { Server } from "./presentation/server";
 function main(){
     const server = new Server({
         PORT:3000,
+        routes: AppRoutes.routes,
         PUBLIC_PATH:'public'
     });
     server.start();

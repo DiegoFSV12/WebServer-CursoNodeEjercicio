@@ -1,8 +1,9 @@
-import express from 'express';
+import express, { Router } from 'express';
 import path from 'path';
 
 interface Options{
     PORT: number,
+    routes: Router,
     PUBLIC_PATH?:string
 }
 
@@ -10,26 +11,22 @@ export class Server{
     private app = express();
     private readonly port:number;
     private readonly publicpath:string;
+    private readonly routes: Router;
 
     constructor(options:Options){
-        const {PORT,PUBLIC_PATH='public'} = options;
+        const {PORT,PUBLIC_PATH='public',routes} = options;
         this.port=PORT;
         this.publicpath=PUBLIC_PATH;
+        this.routes=routes;
     }
     async start(){
-        //Middlewares
+        //Middlewares(Función que se ejecuta cuando una petición pase x ahi)
 
         //Public folder
         this.app.use(express.static(this.publicpath));
 
         //Routes
-        this.app.get('/api/todos',(req,res)=>{
-            res.json([
-                {id:1,text:'Buy milk',createdAt: new Date()},
-                {id:2,text:'Buy meat',createdAt: null},
-                {id:3,text:'Buy bread',createdAt: new Date()},
-            ]);
-        })
+        this.app.use(this.routes);
 
         //SPA
         this.app.get('*',(req,res)=>{
