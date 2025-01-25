@@ -20,7 +20,7 @@ export class Server{
         this.routes=routes;
     }
     async start(){
-        //Middlewares(Función que se ejecuta cuando una petición pase x ahi)
+        //Middlewares(Función que se ejecuta cuando una petición pase por ahi)
         this.app.use(express.json());//Toda petición pasa x aqui y los body que pase se transforman en json
         this.app.use(express.urlencoded({extended:true}));
 
