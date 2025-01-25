@@ -21,6 +21,8 @@ export class Server{
     }
     async start(){
         //Middlewares(Función que se ejecuta cuando una petición pase x ahi)
+        this.app.use(express.json());//Toda petición pasa x aqui y los body que pase se transforman en json
+        this.app.use(express.urlencoded({extended:true}));
 
         //Public folder
         this.app.use(express.static(this.publicpath));
