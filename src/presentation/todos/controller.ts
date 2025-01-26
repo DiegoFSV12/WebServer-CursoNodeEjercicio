@@ -63,7 +63,20 @@ export class TodosController{
                 todos[index] = todo
             }
         })
+        res.json(todo);
+    }
 
+    //Usamos DELETE para borrar fisicamente un elemento
+    public deleteToDo = (req:Request,res:Response) =>{
+        //Buscar y validar
+        const id = +req.params.id;
+        if(isNaN(id)) res.status(404).json({error:`ID argument is not a number`});
+        const todo = todos.find(todo=>todo.id === id);
+        if(!todo) {
+            res.status(404).json({error:`ToDo with id ${id} not found`});
+            return;
+        }
+        todos.slice(todos.indexOf(todo),1);
         res.json(todo);
     }
 }
