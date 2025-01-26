@@ -10,6 +10,19 @@ Crear el archivo .env con la siguiente estructura:
 PORT=
 PUBLIC_PATH=
 
+POSTGRES_URL=
+POSTGRES_USER=
+POSTGRES_DB=
+POSTGRES_PORT=
+POSTGRES_PASSWORD=
+
+
+NODE_ENV=
+
+
+
+Usamos 'docker compose up' -d para levantar la bd.
+
 
 
 /*Desplegado en https://webserver-cursonodeejercicio-production.up.railway.app/marvel*/
