@@ -58,8 +58,6 @@ export class TodosController{
         }else{
             todo.completedAt = new Date(completedAt || todo.completedAt);
         }
-
-
         todos.forEach((todo, index)=>{
             if(todo.id === id){
                 todos[index] = todo
