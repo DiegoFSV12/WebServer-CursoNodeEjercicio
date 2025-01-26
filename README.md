@@ -9,3 +9,8 @@ npm i dotenv env-var
 Crear el archivo .env con la siguiente estructura:
 PORT=
 PUBLIC_PATH=
+
+
+
+/*Desplegado en https://webserver-cursonodeejercicio-production.up.railway.app/marvel*/
+Usando Railway
