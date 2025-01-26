@@ -70,13 +70,12 @@ export class TodosController{
     public deleteToDo = (req:Request,res:Response) =>{
         //Buscar y validar
         const id = +req.params.id;
-        if(isNaN(id)) res.status(404).json({error:`ID argument is not a number`});
         const todo = todos.find(todo=>todo.id === id);
         if(!todo) {
             res.status(404).json({error:`ToDo with id ${id} not found`});
             return;
         }
-        todos.slice(todos.indexOf(todo),1);
+        todos.splice(todos.indexOf(todo),1);
         res.json(todo);
     }
 }
