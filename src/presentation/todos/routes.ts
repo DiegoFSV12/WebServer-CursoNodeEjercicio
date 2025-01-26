@@ -10,6 +10,7 @@ export class TodoRoutes{
         router.get('/:id', todoController.getTodoById);
         router.post('/', todoController.createToDo);
         router.put('/:id', todoController.updateToDo);
+        router.delete('/:id', todoController.deleteToDo);
         return router;
     }
 }
