@@ -41,29 +41,41 @@ export class TodosController{
         //Buscar y validar
         const id = +req.params.id;
         if(isNaN(id)) res.status(404).json({error:`ID argument is not a number`});
+        const todo = await prisma.todo.findUnique({
+            where: {
+                id : id
+            }
+        });
+        if(!todo) res.status(404).json({error: `Todo with id ${id} not found`});
         const {text, completedAt} = req.body;
         if(!text) res.status(404).json({error:`Text property is required`});
-        const todo = await prisma.todo.update({
+        const updatetodo = await prisma.todo.update({
             where: {
                 id : id
             },
             data: {
                 text: text,
-                completedAt: new Date(completedAt)
+                completedAt: (completedAt) ? new Date(completedAt) : null
             }
         });
-        res.json(todo);
+        res.json(updatetodo);
     }
 
     //Usamos DELETE para borrar fisicamente un elemento
     public deleteToDo = async(req:Request,res:Response) =>{
         //Buscar y validar
         const id = +req.params.id;
-        const todo = await prisma.todo.delete({
+        const todo = await prisma.todo.findUnique({
             where: {
                 id : id
             }
         });
-        res.json(todo);
+        if(!todo) res.status(404).json({error: `Todo with id ${id} not found`});
+        const deleted = await prisma.todo.delete({
+            where: {
+                id : id
+            }
+        });
+        res.json({todo, deleted});
     }
 }
