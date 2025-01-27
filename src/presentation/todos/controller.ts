@@ -1,5 +1,6 @@
 import { Request,Response } from "express";
 import { prisma } from "../../data/postgresql";
+import { CreateToDoDTO } from "../../domain/dtos";
 
 export class TodosController{
     constructor(){}
@@ -28,10 +29,10 @@ export class TodosController{
     }
 
     public createToDo = async(req:Request,res:Response)=>{
-        const {text} = req.body;
-        if(!text) res.status(404).json({error:`Text property is required`});
+        const [error,createToDoDTO] = CreateToDoDTO.create(req.body);
+        if(error) return res.status(404).json({error});
         const todo = await prisma.todo.create({
-            data:{text}
+            data: createToDoDTO!
         });
         res.json(todo);
     }
@@ -40,15 +41,15 @@ export class TodosController{
     public updateToDo = async(req:Request, res:Response) => {
         //Buscar y validar
         const id = +req.params.id;
-        if(isNaN(id)) res.status(404).json({error:`ID argument is not a number`});
+        if(isNaN(id)) return res.status(404).json({error:`ID argument is not a number`});
         const todo = await prisma.todo.findUnique({
             where: {
                 id : id
             }
         });
-        if(!todo) res.status(404).json({error: `Todo with id ${id} not found`});
+        if(!todo) return res.status(404).json({error: `Todo with id ${id} not found`});
         const {text, completedAt} = req.body;
-        if(!text) res.status(404).json({error:`Text property is required`});
+        if(!text) return res.status(404).json({error:`Text property is required`});
         const updatetodo = await prisma.todo.update({
             where: {
                 id : id
@@ -70,7 +71,7 @@ export class TodosController{
                 id : id
             }
         });
-        if(!todo) res.status(404).json({error: `Todo with id ${id} not found`});
+        if(!todo) return res.status(404).json({error: `Todo with id ${id} not found`});
         const deleted = await prisma.todo.delete({
             where: {
                 id : id
