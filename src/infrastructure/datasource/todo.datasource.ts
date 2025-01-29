@@ -2,21 +2,43 @@ import { prisma } from "../../data/postgresql";
 import { CreateToDoDTO, TodoDatasource, TodoEntity, UpdateToDoDTO } from "../../domain";
 
 export class TodoDatasourceImpl implements TodoDatasource{
-    create(createTodoDTO: CreateToDoDTO): Promise<TodoEntity> {
-        throw new Error("Method not implemented.");
+    async create(createTodoDTO: CreateToDoDTO): Promise<TodoEntity> {
+        const todo = await prisma.todo.create({
+            data: createTodoDTO!
+        });
+        return TodoEntity.fromObject(todo);
     }
     async getAll(): Promise<TodoEntity[]> {
         const todos = await prisma.todo.findMany();
         return todos.map(todo=>TodoEntity.fromObject(todo));
     }
-    findById(id: number): Promise<TodoEntity> {
-        throw new Error("Method not implemented.");
+    async findById(id: number): Promise<TodoEntity> {
+        const todo = await prisma.todo.findUnique({
+            where: {
+                id : id
+            }
+        });
+        if(!todo) throw `ToDo with id ${id} not found`;
+        return TodoEntity.fromObject(todo);
     }
-    updateById(updateTodoDTO: UpdateToDoDTO): Promise<TodoEntity> {
-        throw new Error("Method not implemented.");
+    async updateById(updateTodoDTO: UpdateToDoDTO): Promise<TodoEntity> {
+        await this.findById(updateTodoDTO.id);
+        const updatetodo = await prisma.todo.update({
+            where: {
+                id : updateTodoDTO.id
+            },
+            data: updateTodoDTO!.values
+        });
+        return TodoEntity.fromObject(updatetodo);
     }
-    deleteById(id: number): Promise<TodoEntity> {
-        throw new Error("Method not implemented.");
+    async deleteById(id: number): Promise<TodoEntity> {
+        await this.findById(id);
+        const deleted = await prisma.todo.delete({
+            where: {
+                id : id
+            }
+        });
+        return TodoEntity.fromObject(deleted);
     }
 
 }
