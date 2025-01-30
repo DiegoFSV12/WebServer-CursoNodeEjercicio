@@ -1,4 +1,5 @@
 import express, { Router } from 'express';
+import compression from 'compression';
 import path from 'path';
 
 interface Options{
@@ -23,6 +24,7 @@ export class Server{
         //Middlewares(Función que se ejecuta cuando una petición pase por ahi)
         this.app.use(express.json());//Toda petición pasa x aqui y los body que pase se transforman en json
         this.app.use(express.urlencoded({extended:true}));
+        this.app.use(compression());//Compression optimiza la velocidad de las respuestas
 
         //Public folder
         this.app.use(express.static(this.publicpath));
